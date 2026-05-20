@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lombana Therapy</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header class="header">
+  <a href="index.html" class="logo">
+    <h1>Lombana Therapy</h1>
+  </a>
+
+    <nav class="nav">
+      <a href="admin.html" class="admin-only" style="display:none;">Citas agendadas</a>
+      <a href="dashboard.html" class="admin-only" style="display:none;">Dashboard</a>
+      <a href="index.html">Inicio</a>
+
+    <div class="dropdown">
+      <a href="terapias.html" class="dropdown-btn">Terapias</a>
+        <div class="dropdown-content">
+          <a href="terapia-detalle.html?terapia=masaje-relajante">Masaje relajante</a>
+          <a href="terapia-detalle.html?terapia=drenaje-linfatico">Drenaje linfático</a>
+          <a href="terapia-detalle.html?terapia=masaje-terapeutico">Masaje terapéutico</a>
+          <a href="terapia-detalle.html?terapia=quiromasaje">Quiromasaje</a>
+          <a href="terapia-detalle.html?terapia=reflexologia">Reflexología podal y de manos</a>
+          <a href="terapia-detalle.html?terapia=ventosas">Ventosas</a>
+          <a href="terapia-detalle.html?terapia=ajustes-quiropracticos">Ajustes quiroprácticos</a>
+          <a href="terapia-detalle.html?terapia=aromaterapia">Aromaterapia</a>
+        </div>
+      </div>
+
+      <a href="agendar.html">Agendar terapia</a>
+      <a href="#contacto">Contacto</a>
+      <a href="#ubicacion">Ubicación</a>
+      <a href="login.html">Login</a>
+      <button type="button" onclick="cerrarSesion()" class="btn-logout">
+        Sign out
+      </button>
+    </nav>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <div class="hero-content">
+        <h2>Bienestar, equilibrio y terapia corporal personalizada</h2>
+
+        <p>
+          En Lombana Therapy te ayudamos a mejorar tu bienestar físico mediante terapias manuales,
+          relajantes y quiroprácticas.
+        </p>
+
+        <a href="agendar.html" class="btn-primary">Agendar terapia</a>
+      </div>
+
+      <div class="hero-logo-box">
+        <img
+          src="assets/img/lombana-therapy-logo.png"
+          alt="Logo Lombana Therapy"
+          class="hero-logo-img"
+        >
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Nuestras terapias</h2>
+
+      <div class="cards">
+
+        <div class="card therapy-card">
+          <img
+            class="card-img"
+            src="assets/img/masaje-relajante.jpg"
+            alt="Masaje relajante"
+            onerror="this.onerror=null; this.src='assets/img/terapia-default.jpg';"
+          >
+
+          <div class="card-body">
+            <h3>Masaje relajante</h3>
+            <p>Ideal para reducir estrés, cansancio y tensión muscular.</p>
+            <a href="terapia-detalle.html?terapia=masaje-relajante">Ver más</a>
+          </div>
+        </div>
+
+        <div class="card therapy-card">
+          <img
+            class="card-img"
+            src="assets/img/drenaje-linfatico.jpg"
+            alt="Drenaje linfático"
+            onerror="this.onerror=null; this.src='assets/img/terapia-default.jpg';"
+          >
+
+          <div class="card-body">
+            <h3>Drenaje linfático</h3>
+            <p>Ayuda a estimular el sistema linfático y reducir retención de líquidos.</p>
+            <a href="terapia-detalle.html?terapia=drenaje-linfatico">Ver más</a>
+          </div>
+        </div>
+
+        <div class="card therapy-card">
+          <img
+            class="card-img"
+            src="assets/img/masaje-terapeutico.jpg"
+            alt="Masaje terapéutico"
+            onerror="this.onerror=null; this.src='assets/img/terapia-default.jpg';"
+          >
+
+          <div class="card-body">
+            <h3>Masaje terapéutico</h3>
+            <p>Orientado a molestias musculares, tensión localizada y recuperación física.</p>
+            <a href="terapia-detalle.html?terapia=masaje-terapeutico">Ver más</a>
+          </div>
+        </div>
+
+        <div class="card therapy-card">
+          <img
+            class="card-img"
+            src="assets/img/quiromasaje.jpg"
+            alt="Quiromasaje"
+            onerror="this.onerror=null; this.src='assets/img/terapia-default.jpg';"
+          >
+
+          <div class="card-body">
+            <h3>Quiromasaje</h3>
+            <p>Técnica manual para aliviar tensión, mejorar movilidad y favorecer recuperación.</p>
+            <a href="terapia-detalle.html?terapia=quiromasaje">Ver más</a>
+          </div>
+        </div>
+
+        <div class="card therapy-card">
+          <img
+            class="card-img"
+            src="assets/img/reflexologia.jpg"
+            alt="Reflexología podal y de manos"
+            onerror="this.onerror=null; this.src='assets/img/terapia-default.jpg';"
+          >
+
+          <div class="card-body">
+            <h3>Reflexología podal y de manos</h3>
+            <p>Estimulación de puntos reflejos en pies y manos para promover equilibrio corporal.</p>
+            <a href="terapia-detalle.html?terapia=reflexologia">Ver más</a>
+          </div>
+        </div>
+
+        <div class="card therapy-card">
+          <img
+            class="card-img"
+            src="assets/img/ventosas.jpg"
+            alt="Ventosas terapéuticas"
+            onerror="this.onerror=null; this.src='assets/img/terapia-default.jpg';"
+          >
+
+          <div class="card-body">
+            <h3>Ventosas</h3>
+            <p>Terapia con ventosas para trabajar tensión muscular y circulación local.</p>
+            <a href="terapia-detalle.html?terapia=ventosas">Ver más</a>
+          </div>
+        </div>
+
+        <div class="card therapy-card">
+          <img
+            class="card-img"
+            src="assets/img/ajustes-quiropracticos.jpg"
+            alt="Ajustes quiroprácticos"
+            onerror="this.onerror=null; this.src='assets/img/terapia-default.jpg';"
+          >
+
+          <div class="card-body">
+            <h3>Ajustes quiroprácticos</h3>
+            <p>Enfocado en movilidad, postura y bienestar corporal.</p>
+            <a href="terapia-detalle.html?terapia=ajustes-quiropracticos">Ver más</a>
+          </div>
+        </div>
+
+        <div class="card therapy-card">
+          <img
+            class="card-img"
+            src="assets/img/aromaterapia.jpg"
+            alt="Aromaterapia"
+            onerror="this.onerror=null; this.src='assets/img/terapia-default.jpg';"
+          >
+
+          <div class="card-body">
+            <h3>Aromaterapia</h3>
+            <p>Uso de aromas y aceites esenciales para acompañar una sesión relajante.</p>
+            <a href="terapia-detalle.html?terapia=aromaterapia">Ver más</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+<section id="contacto" class="section contact-section">
+  <h2>Contacto</h2>
+
+  <h3 class="contact-subtitle">
+    Puedes escribirnos directamente por WhatsApp para resolver dudas o pedir más información.
+  </h3>
+
+  <div class="contact-buttons">
+    <a
+      class="contact-btn whatsapp-btn"
+      href="https://wa.me/525611676062?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20una%20terapia"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      WhatsApp
+    </a>
+
+    <a
+      class="contact-btn facebook-btn"
+      href="https://www.facebook.com/share/18qwNpB73q/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Facebook
+    </a>
+  </div>
+</section>
+
+<section id="ubicacion" class="section">
+  <h2>Ubicación</h2>
+
+  <p>
+    Consulta la ubicación del consultorio en el siguiente mapa.
+  </p>
+
+  <h3 class="address-text">
+    Av. del Rosal 30, Los Ángeles, Iztapalapa, 09837 Ciudad de México, CDMX
+  </h3>
+
+  <div class="map-container">
+    <iframe
+      src="https://www.google.com/maps?q=19.34731144219217,-99.07544267561784&z=17&output=embed"
+      width="100%"
+      height="350"
+      style="border:0;"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+
+  <a
+    class="btn-primary map-btn"
+    href="https://www.google.com/maps?q=19.34731144219217,-99.07544267561784"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Abrir ubicación en Google Maps
+  </a>
+</section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Lombana Therapy © 2026</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    async function mostrarOpcionesAdmin() {
+      const { data } = await supabaseClient.auth.getSession();
+
+      if (!data.session) return;
+
+      const { data: perfil } = await supabaseClient
+        .from('profiles')
+        .select('rol')
+        .eq('id', data.session.user.id)
+        .single();
+
+      if (perfil && perfil.rol === 'admin') {
+        document.querySelectorAll('.admin-only').forEach(el => {
+          el.style.display = 'inline-block';
+        });
+      }
+    }
+
+    mostrarOpcionesAdmin();
+  </script>
+</body>
+</html>

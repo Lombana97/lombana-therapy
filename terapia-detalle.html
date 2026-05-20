@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle de terapia - Lombana Therapy</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header class="header">
+  <a href="index.html" class="logo">
+    <h1>Lombana Therapy</h1>
+  
+  </a>
+
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="terapias.html">Terapias</a>
+      <a href="agendar.html">Agendar terapia</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section detail-section">
+      <div class="detail-card detail-card-wide">
+        <img
+          id="terapia-imagen"
+          class="detail-img"
+          src="assets/img/terapia-default.jpg"
+          alt="Terapia"
+          onerror="imagenFallback(this)"
+        >
+
+        <div class="detail-content">
+          <h2 id="terapia-nombre">Cargando terapia...</h2>
+          <p id="terapia-descripcion"></p>
+          <p id="terapia-duracion"></p>
+          <p id="terapia-precio"></p>
+
+          <a id="btn-agendar-terapia" href="agendar.html" class="btn-primary">
+            Agendar terapia
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/terapias.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

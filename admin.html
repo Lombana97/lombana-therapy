@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel terapeuta - Lombana Therapy</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="index.html" class="logo">
+    <h1>Lombana Therapy</h1>
+  </a>
+
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="agendar.html">Agenda pública</a>
+      <button type="button" class="nav-button" onclick="cerrarSesion()">Cerrar sesión</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section">
+      <h2>Generar horarios disponibles</h2>
+
+      <div class="admin-box">
+        <label for="fecha-admin">Selecciona una fecha</label>
+        <input type="date" id="fecha-admin">
+
+        <button type="button" class="btn-primary" onclick="generarHorariosDelDia()">
+          Generar horarios del día
+        </button>
+
+        <p class="info-text">
+          Lunes a viernes genera horarios de 9:00 a 18:00 hrs.  
+          Sábado genera horarios de 9:00 a 15:00 hrs.  
+          Domingo no genera horarios.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Citas agendadas</h2>
+
+      <div class="admin-box">
+        <label for="fecha-citas">Filtrar por fecha</label>
+        <input type="date" id="fecha-citas" onchange="cargarCitasAdmin()">
+
+        <div class="table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Terapia</th>
+                <th>Paciente</th>
+                <th>Teléfono</th>
+                <th>Status</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-citas">
+              <tr>
+                <td colspan="7">Cargando citas...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <h2>Editar precios de terapias</h2>
+      <div id="lista-precios-terapias" class="admin-box">
+        <p>Cargando terapias...</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

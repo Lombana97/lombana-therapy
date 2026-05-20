@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendar terapia - Lombana Therapy</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header class="header">
+  <a href="index.html" class="logo">
+    <h1>Lombana Therapy</h1>
+  </a>
+
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="terapias.html">Terapias</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="form-section">
+      <div class="form-card">
+        <h2>Agenda tu terapia</h2>
+
+        <p class="info-text">
+          Horario de atención: lunes a viernes de 9:00 a 18:00 hrs y sábado de 9:00 a 15:00 hrs.
+        </p>
+
+        <p class="info-text">
+          Duración: 1 hora | Precio por sesión: $400 MXN
+        </p>
+
+        <label for="terapia">Selecciona una terapia</label>
+        <select id="terapia" required>
+          <option value="">Cargando terapias...</option>
+        </select>
+
+        <label for="fecha">Selecciona una fecha</label>
+        <input type="date" id="fecha" onchange="cargarHorariosDisponibles()" required>
+
+        <h3>Horarios disponibles</h3>
+
+        <div id="horarios" class="slots-container">
+          <p>Selecciona una fecha para ver horarios.</p>
+        </div>
+
+        <button type="button" class="btn-primary" onclick="confirmarCita()">
+          Confirmar cita
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/agenda.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
