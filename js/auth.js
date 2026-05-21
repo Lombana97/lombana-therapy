@@ -40,7 +40,7 @@ async function registrarUsuario(event) {
     });
   }
 
-  alert('Registro exitoso. Si Supabase te pide confirmar correo, revisa tu email. Después inicia sesión.');
+ alert('Cuenta creada exitosamente, favor de iniciar sesion.');
 const params = new URLSearchParams(window.location.search);
 const redirect = params.get('redirect');
 
