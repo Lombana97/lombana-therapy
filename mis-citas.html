@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mis citas - Lombana Therapy</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="header">
+  <a href="index.html" class="logo">
+    <h1>Lombana Therapy</h1>
+  </a>
+
+  <nav class="nav">
+    <a href="index.html">Inicio</a>
+    <a href="agendar.html">Agendar terapia</a>
+    <button type="button" onclick="cerrarSesion()" class="btn-logout">Sign out</button>
+  </nav>
+</header>
+
+<main>
+  <section class="section">
+    <h2>Mis citas</h2>
+
+    <div id="mis-citas-container">
+      <p>Cargando citas...</p>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/mis-citas.js"></script>
+</body>
+</html>
