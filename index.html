@@ -17,7 +17,7 @@
       <a href="admin.html" class="admin-only" style="display:none;">Citas agendadas</a>
       <a href="dashboard.html" class="admin-only" style="display:none;">Dashboard</a>
       <a href="index.html">Inicio</a>
-
+      <a href="mis-citas.html" id="btn-mis-citas" style="display:none;">Citas</a>
     <div class="dropdown">
       <a href="terapias.html" class="dropdown-btn">Terapias</a>
         <div class="dropdown-content">
@@ -36,7 +36,7 @@
       <a href="#contacto">Contacto</a>
       <a href="#ubicacion">Ubicación</a>
       <a href="login.html">Login</a>
-      <button type="button" onclick="cerrarSesion()" class="btn-logout">
+      <button type="button" onclick="cerrarSesion()" class="btn-logout" id="btn-logout" style="display:none;">
         Sign out
       </button>
     </nav>
@@ -284,6 +284,30 @@
     }
 
     mostrarOpcionesAdmin();
+  </script>
+  <script>
+    async function mostrarBotonLogout() {
+      const { data } = await supabaseClient.auth.getSession();
+      const btnLogout = document.getElementById('btn-logout');
+
+      if (btnLogout && data.session) {
+        btnLogout.style.display = 'inline-block';
+      }
+    }
+
+    mostrarBotonLogout();
+  </script>
+    <script>
+    async function mostrarBotonMisCitas() {
+      const { data } = await supabaseClient.auth.getSession();
+      const btn = document.getElementById('btn-mis-citas');
+
+      if (btn && data.session) {
+        btn.style.display = 'inline-block';
+      }
+    }
+
+    mostrarBotonMisCitas();
   </script>
 </body>
 </html>
