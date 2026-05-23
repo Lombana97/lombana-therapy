@@ -64,10 +64,36 @@ async function iniciarSesion(event) {
     return;
   }
 
+  const { data: sessionData, error: sessionError } =
+    await supabaseClient.auth.getSession();
+
+  if (sessionError || !sessionData.session) {
+    alert('No fue posible verificar la sesión.');
+    return;
+  }
+
+  const user = sessionData.session.user;
+
+  const { data: perfil, error: perfilError } = await supabaseClient
+    .from('profiles')
+    .select('rol')
+    .eq('id', user.id)
+    .single();
+
+  if (!perfilError && perfil && perfil.rol === 'admin') {
+    window.location.href = 'admin.html';
+    return;
+  }
+
   const params = new URLSearchParams(window.location.search);
   const redirect = params.get('redirect');
 
-  window.location.href = redirect || 'agendar.html';
+  if (redirect) {
+    window.location.href = redirect;
+    return;
+  }
+
+  window.location.href = 'index.html';
 }
 async function cerrarSesion() {
   const { error } = await supabaseClient.auth.signOut();

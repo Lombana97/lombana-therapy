@@ -2,66 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard - Lombana Therapy</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <meta http-equiv="refresh" content="0; url=admin.html">
+  <title>Panel administrador - Lombana Therapy</title>
+  <script>
+    window.location.replace('admin.html');
+  </script>
 </head>
 <body>
-
-<header class="header">
-  <a href="index.html" class="logo">
-    <h1>Lombana Therapy</h1>
-    <p>Dashboard administrador</p>
-  </a>
-
-  <nav class="nav">
-    <a href="index.html">Inicio</a>
-    <a href="admin.html">Citas agendadas</a>
-    <button type="button" class="nav-button" onclick="cerrarSesion()">Cerrar sesión</button>
-  </nav>
-</header>
-
-<main>
-  <section class="section">
-    <h2>Dashboard de citas</h2>
-
-    <div class="admin-box">
-      <label for="fecha-inicio">Fecha inicio</label>
-      <input type="date" id="fecha-inicio">
-
-      <label for="fecha-fin">Fecha fin</label>
-      <input type="date" id="fecha-fin">
-
-      <button type="button" class="btn-primary" onclick="cargarDashboard()">
-        Generar reporte
-      </button>
-    </div>
-
-    <div class="dashboard-grid">
-      <div class="admin-box">
-        <h3>Terapia más agendada</h3>
-        <p id="terapia-mas-agendada">Sin datos</p>
-      </div>
-
-      <div class="admin-box">
-        <h3>Día más agendado</h3>
-        <p id="dia-mas-agendado">Sin datos</p>
-      </div>
-
-      <div class="admin-box">
-        <h3>Cliente más frecuente</h3>
-        <p id="cliente-mas-frecuente">Sin datos</p>
-      </div>
-
-      <div class="admin-box">
-        <h3>Género que más agenda</h3>
-        <p id="genero-mas-agenda">Sin datos</p>
-      </div>
-    </div>
-  </section>
-</main>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase.js"></script>
-<script src="js/dashboard.js"></script>
+  <p>Redirigiendo al panel administrador...</p>
 </body>
 </html>

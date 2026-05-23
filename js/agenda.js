@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     return;
   }
 
+  configurarFechaMinima();
   await cargarTerapiasAgenda();
 
   const fechaInput = document.getElementById('fecha');
@@ -28,23 +29,53 @@ async function protegerAgenda() {
     console.error('Error al obtener sesión:', error);
     alert('Ocurrió un error al verificar tu sesión. Inicia sesión nuevamente.');
 
-    const regreso = encodeURIComponent(window.location.pathname.split('/').pop() + window.location.search);
-    window.location.replace('login.html?redirect=' + regreso);
+    const regreso = encodeURIComponent(
+      window.location.pathname.split('/').pop() + window.location.search
+    );
 
+    window.location.replace('login.html?redirect=' + regreso);
     return false;
   }
 
   if (!data || !data.session || !data.session.user) {
     alert('Debes iniciar sesión para agendar una cita.');
 
-    const regreso = encodeURIComponent(window.location.pathname.split('/').pop() + window.location.search);
-    window.location.replace('login.html?redirect=' + regreso);
+    const regreso = encodeURIComponent(
+      window.location.pathname.split('/').pop() + window.location.search
+    );
 
+    window.location.replace('login.html?redirect=' + regreso);
     return false;
   }
 
   usuarioActual = data.session.user;
   return true;
+}
+
+function configurarFechaMinima() {
+  const fechaInput = document.getElementById('fecha');
+
+  if (!fechaInput) {
+    return;
+  }
+
+  const hoy = obtenerFechaActualTexto();
+
+  fechaInput.min = hoy;
+
+  if (fechaInput.value && fechaInput.value < hoy) {
+    fechaInput.value = '';
+  }
+}
+
+function obtenerFechaActualTexto() {
+  const ahora = new Date();
+
+  const anio = ahora.getFullYear();
+  const mes = String(ahora.getMonth() + 1).padStart(2, '0');
+  const dia = String(ahora.getDate()).padStart(2, '0');
+
+  return `${anio}-${mes}-${dia}`;
 }
 
 function obtenerSlug(nombre) {
@@ -128,6 +159,13 @@ async function cargarHorariosDisponibles() {
     return;
   }
 
+  if (fechaEsAnteriorAHoy(fecha)) {
+    fechaInput.value = '';
+    contenedor.innerHTML = '<p>No puedes agendar citas en fechas anteriores a hoy.</p>';
+    alert('No puedes agendar citas en fechas anteriores a hoy.');
+    return;
+  }
+
   const dia = obtenerDiaSemana(fecha);
 
   if (dia === 0) {
@@ -138,6 +176,15 @@ async function cargarHorariosDisponibles() {
   contenedor.innerHTML = '<p>Cargando horarios...</p>';
 
   const horariosDelDia = generarHorariosPorFecha(fecha);
+
+  const horariosVigentes = horariosDelDia.filter(horario => {
+    return !horarioYaPaso(horario);
+  });
+
+  if (horariosVigentes.length === 0) {
+    contenedor.innerHTML = '<p>Ya no hay horarios disponibles para este día.</p>';
+    return;
+  }
 
   const { data: citasExistentes, error } = await supabaseClient
     .from('appointments')
@@ -157,7 +204,7 @@ async function cargarHorariosDisponibles() {
 
   contenedor.innerHTML = '';
 
-  horariosDelDia.forEach(horario => {
+  horariosVigentes.forEach(horario => {
     const button = document.createElement('button');
 
     button.type = 'button';
@@ -179,6 +226,17 @@ async function cargarHorariosDisponibles() {
 
     contenedor.appendChild(button);
   });
+
+  const horariosLibres = horariosVigentes.filter(horario => {
+    return !horasOcupadas.includes(formatearHora(horario.hora_inicio));
+  });
+
+  if (horariosLibres.length === 0) {
+    contenedor.insertAdjacentHTML(
+      'beforeend',
+      '<p>Todos los horarios disponibles de este día ya están ocupados.</p>'
+    );
+  }
 }
 
 function generarHorariosPorFecha(fecha) {
@@ -205,6 +263,12 @@ function generarHorariosPorFecha(fecha) {
 }
 
 function seleccionarHorario(horario, button) {
+  if (horarioYaPaso(horario)) {
+    alert('Este horario ya no está disponible porque la hora ya pasó.');
+    cargarHorariosDisponibles();
+    return;
+  }
+
   horarioSeleccionado = horario;
 
   document.querySelectorAll('.slot-btn').forEach(btn => {
@@ -240,6 +304,20 @@ async function confirmarCita() {
     return;
   }
 
+  if (fechaEsAnteriorAHoy(horarioSeleccionado.fecha)) {
+    alert('No puedes agendar citas en fechas anteriores a hoy.');
+    horarioSeleccionado = null;
+    cargarHorariosDisponibles();
+    return;
+  }
+
+  if (horarioYaPaso(horarioSeleccionado)) {
+    alert('Este horario ya pasó. Selecciona otro horario disponible.');
+    horarioSeleccionado = null;
+    cargarHorariosDisponibles();
+    return;
+  }
+
   const user = usuarioActual;
 
   if (!user || !user.id) {
@@ -265,6 +343,17 @@ async function confirmarCita() {
   if (citaDuplicada) {
     alert('Ese horario ya fue reservado. Selecciona otro horario.');
     await cargarHorariosDisponibles();
+    return;
+  }
+
+  /*
+    Se valida nuevamente justo antes de insertar,
+    por si el usuario dejó abierta la página varios minutos.
+  */
+  if (horarioYaPaso(horarioSeleccionado)) {
+    alert('El horario seleccionado acaba de vencer. Selecciona otro horario.');
+    horarioSeleccionado = null;
+    cargarHorariosDisponibles();
     return;
   }
 
@@ -297,6 +386,42 @@ async function confirmarCita() {
   window.location.reload();
 }
 
+function fechaEsAnteriorAHoy(fechaTexto) {
+  const hoy = obtenerFechaActualTexto();
+
+  return fechaTexto < hoy;
+}
+
+function horarioYaPaso(horario) {
+  if (!horario || !horario.fecha || !horario.hora_inicio) {
+    return true;
+  }
+
+  const fechaHoraInicio = construirFechaHoraLocal(
+    horario.fecha,
+    horario.hora_inicio
+  );
+
+  const ahora = new Date();
+
+  return fechaHoraInicio <= ahora;
+}
+
+function construirFechaHoraLocal(fechaTexto, horaTexto) {
+  const partesFecha = fechaTexto.split('-');
+  const partesHora = horaTexto.split(':');
+
+  const anio = Number(partesFecha[0]);
+  const mes = Number(partesFecha[1]) - 1;
+  const dia = Number(partesFecha[2]);
+
+  const hora = Number(partesHora[0]);
+  const minutos = Number(partesHora[1] || 0);
+  const segundos = Number(partesHora[2] || 0);
+
+  return new Date(anio, mes, dia, hora, minutos, segundos);
+}
+
 async function cerrarSesion() {
   await supabaseClient.auth.signOut();
   window.location.replace('login.html');
@@ -308,6 +433,9 @@ function obtenerDiaSemana(fechaTexto) {
 }
 
 function formatearHora(hora) {
-  if (!hora) return '';
+  if (!hora) {
+    return '';
+  }
+
   return hora.substring(0, 5);
 }

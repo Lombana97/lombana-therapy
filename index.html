@@ -13,33 +13,33 @@
     <h1>Lombana Therapy</h1>
   </a>
 
-    <nav class="nav">
-      <a href="admin.html" class="admin-only" style="display:none;">Citas agendadas</a>
-      <a href="dashboard.html" class="admin-only" style="display:none;">Dashboard</a>
-      <a href="index.html">Inicio</a>
-      <a href="mis-citas.html" id="btn-mis-citas" style="display:none;">Citas</a>
+  <nav class="nav">
+    <a href="index.html">Inicio</a>
+    <a href="mis-citas.html" id="btn-mis-citas" style="display:none;">Citas</a>
+
     <div class="dropdown">
       <a href="terapias.html" class="dropdown-btn">Terapias</a>
-        <div class="dropdown-content">
-          <a href="terapia-detalle.html?terapia=masaje-relajante">Masaje relajante</a>
-          <a href="terapia-detalle.html?terapia=drenaje-linfatico">Drenaje linfático</a>
-          <a href="terapia-detalle.html?terapia=masaje-terapeutico">Masaje terapéutico</a>
-          <a href="terapia-detalle.html?terapia=quiromasaje">Quiromasaje</a>
-          <a href="terapia-detalle.html?terapia=reflexologia">Reflexología podal y de manos</a>
-          <a href="terapia-detalle.html?terapia=ventosas">Ventosas</a>
-          <a href="terapia-detalle.html?terapia=ajustes-quiropracticos">Ajustes quiroprácticos</a>
-          <a href="terapia-detalle.html?terapia=aromaterapia">Aromaterapia</a>
-        </div>
+      <div class="dropdown-content">
+        <a href="terapia-detalle.html?terapia=masaje-relajante">Masaje relajante</a>
+        <a href="terapia-detalle.html?terapia=drenaje-linfatico">Drenaje linfático</a>
+        <a href="terapia-detalle.html?terapia=masaje-terapeutico">Masaje terapéutico</a>
+        <a href="terapia-detalle.html?terapia=quiromasaje">Quiromasaje</a>
+        <a href="terapia-detalle.html?terapia=reflexologia">Reflexología podal y de manos</a>
+        <a href="terapia-detalle.html?terapia=ventosas">Ventosas</a>
+        <a href="terapia-detalle.html?terapia=ajustes-quiropracticos">Ajustes quiroprácticos</a>
+        <a href="terapia-detalle.html?terapia=aromaterapia">Aromaterapia</a>
       </div>
+    </div>
 
-      <a href="agendar.html">Agendar terapia</a>
-      <a href="#contacto">Contacto</a>
-      <a href="#ubicacion">Ubicación</a>
-      <a href="login.html">Login</a>
-      <button type="button" onclick="cerrarSesion()" class="btn-logout" id="btn-logout" style="display:none;">
-        Sign out
-      </button>
-    </nav>
+    <a href="agendar.html">Agendar terapia</a>
+    <a href="#contacto">Contacto</a>
+    <a href="#ubicacion">Ubicación</a>
+    <a href="login.html">Login</a>
+
+    <button type="button" onclick="cerrarSesion()" class="btn-logout" id="btn-logout" style="display:none;">
+      Sign out
+    </button>
+  </nav>
   </header>
 
   <main>
@@ -276,11 +276,9 @@
         .eq('id', data.session.user.id)
         .single();
 
-      if (perfil && perfil.rol === 'admin') {
-        document.querySelectorAll('.admin-only').forEach(el => {
-          el.style.display = 'inline-block';
-        });
-      }
+if (perfil && perfil.rol === 'admin') {
+  window.location.replace('admin.html');
+}
     }
 
     mostrarOpcionesAdmin();

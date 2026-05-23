@@ -1,5 +1,10 @@
-document.addEventListener('DOMContentLoaded', function () {
-  protegerAdmin();
+document.addEventListener('DOMContentLoaded', async function () {
+  const autorizado = await protegerAdmin();
+
+  if (!autorizado) {
+    return;
+  }
+
   cargarPreciosTerapias();
 });
 async function protegerAdmin() {
@@ -8,7 +13,7 @@ async function protegerAdmin() {
   if (!sessionData.session) {
     alert('Debes iniciar sesión.');
     window.location.href = 'login.html';
-    return;
+    return false;
   }
 
   const user = sessionData.session.user;
@@ -22,54 +27,12 @@ async function protegerAdmin() {
   if (error || !perfil || perfil.rol !== 'admin') {
     alert('No tienes permiso para entrar al panel del terapeuta.');
     window.location.href = 'index.html';
-    return;
+    return false;
   }
 
   cargarCitasAdmin();
-}
 
-async function generarHorariosDelDia() {
-  const fecha = document.getElementById('fecha-admin').value;
-
-  if (!fecha) {
-    alert('Selecciona una fecha.');
-    return;
-  }
-
-  const dia = obtenerDiaSemana(fecha);
-
-  if (dia === 0) {
-    alert('El consultorio no abre los domingos.');
-    return;
-  }
-
-  const horaInicio = 9;
-  const horaFin = dia === 6 ? 15 : 18;
-  const horarios = [];
-
-  for (let hora = horaInicio; hora < horaFin; hora++) {
-    horarios.push({
-      fecha: fecha,
-      hora_inicio: convertirHora(hora),
-      hora_fin: convertirHora(hora + 1),
-      disponible: true
-    });
-  }
-
-  const { error } = await supabaseClient
-    .from('available_slots')
-    .upsert(horarios, {
-      onConflict: 'fecha,hora_inicio',
-      ignoreDuplicates: true
-    });
-
-  if (error) {
-    alert('Error al generar horarios: ' + error.message);
-    return;
-  }
-
-  alert('Horarios generados correctamente.');
-  cargarCitasAdmin();
+  return true;
 }
 
 async function cargarCitasAdmin() {
@@ -78,7 +41,7 @@ async function cargarCitasAdmin() {
 
   tbody.innerHTML = `
     <tr>
-      <td colspan="6">Cargando citas...</td>
+      <td colspan="7">Cargando citas...</td>
     </tr>
   `;
 
@@ -109,7 +72,7 @@ async function cargarCitasAdmin() {
   if (error) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="6">Error al cargar citas: ${error.message}</td>
+        <td colspan="7">Error al cargar citas: ${error.message}</td>
       </tr>
     `;
     return;
@@ -118,7 +81,7 @@ async function cargarCitasAdmin() {
   if (!data || data.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="6">No hay citas registradas.</td>
+        <td colspan="7">No hay citas registradas.</td>
       </tr>
     `;
     return;
@@ -137,9 +100,15 @@ async function cargarCitasAdmin() {
       <td>${cita.profiles ? cita.profiles.telefono || '' : ''}</td>
       <td>${cita.status}</td>
       <td>
-        <button type="button" class="btn-danger" onclick="eliminarCita('${cita.id}')">
-          Eliminar
-        </button>
+        ${
+          normalizarTexto(cita.status || '') === 'cancelada'
+            ? '<span class="status-cancelada">Cancelada</span>'
+            : `
+              <button type="button" class="btn-danger" onclick="cancelarCita('${cita.id}')">
+                Cancelar cita
+              </button>
+            `
+        }
       </td>
     `;
 
@@ -152,36 +121,41 @@ async function cerrarSesion() {
   window.location.href = 'login.html';
 }
 
-function obtenerDiaSemana(fechaTexto) {
-  const fecha = new Date(fechaTexto + 'T00:00:00');
-  return fecha.getDay();
-}
-
-function convertirHora(hora) {
-  return String(hora).padStart(2, '0') + ':00:00';
-}
-
 function formatearHora(hora) {
   if (!hora) return '';
   return hora.substring(0, 5);
 }
-async function eliminarCita(id) {
-  const confirmar = confirm('¿Seguro que deseas eliminar esta cita?');
+async function cancelarCita(id) {
+  const confirmar = confirm(
+    '¿Seguro que deseas cancelar esta cita? La cita permanecerá guardada en el historial.'
+  );
 
-  if (!confirmar) return;
-
-  const { error } = await supabaseClient
-    .from('appointments')
-    .delete()
-    .eq('id', id);
-
-  if (error) {
-    alert('Error al eliminar cita: ' + error.message);
+  if (!confirmar) {
     return;
   }
 
-  alert('Cita eliminada correctamente.');
+  const { error } = await supabaseClient
+    .from('appointments')
+    .update({
+      status: 'cancelada'
+    })
+    .eq('id', id);
+
+  if (error) {
+    alert('Error al cancelar la cita: ' + error.message);
+    return;
+  }
+
+  alert('Cita cancelada correctamente.');
+
   cargarCitasAdmin();
+
+  const inicio = document.getElementById('fecha-inicio')?.value;
+  const fin = document.getElementById('fecha-fin')?.value;
+
+  if (inicio && fin) {
+    cargarDashboard();
+  }
 }
 async function cargarPreciosTerapias() {
   const contenedor = document.getElementById('lista-precios-terapias');
@@ -231,4 +205,202 @@ async function actualizarPrecioTerapia(id) {
   }
 
   alert('Precio actualizado correctamente.');
+}
+async function cargarDashboard() {
+  const inicio = document.getElementById('fecha-inicio').value;
+  const fin = document.getElementById('fecha-fin').value;
+
+  if (!inicio || !fin) {
+    alert('Selecciona fecha inicio y fecha fin.');
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from('appointments')
+    .select(`
+      id,
+      fecha,
+      hora_inicio,
+      status,
+      therapies (
+        nombre,
+        precio
+      ),
+      profiles (
+        nombre,
+        genero
+      )
+    `)
+    .gte('fecha', inicio)
+    .lte('fecha', fin)
+    .order('fecha', { ascending: true })
+    .order('hora_inicio', { ascending: true });
+
+  if (error) {
+    alert('Error al cargar dashboard: ' + error.message);
+    return;
+  }
+
+  const citas = data || [];
+
+  const citasCanceladas = citas.filter(cita => {
+    return normalizarTexto(cita.status || '') === 'cancelada';
+  });
+
+  const citasValidas = citas.filter(cita => {
+    return normalizarTexto(cita.status || '') !== 'cancelada';
+  });
+
+  mostrarMasFrecuente(
+    citasValidas,
+    'terapia-mas-agendada',
+    cita => cita.therapies?.nombre || 'Sin terapia'
+  );
+
+  mostrarMasFrecuente(
+    citasValidas,
+    'cliente-mas-frecuente',
+    cita => cita.profiles?.nombre || 'Sin cliente'
+  );
+
+  mostrarMasFrecuente(
+    citasValidas,
+    'genero-mas-agenda',
+    cita => cita.profiles?.genero || 'Sin género'
+  );
+
+  mostrarMasFrecuente(
+    citasValidas,
+    'dia-mas-agendado',
+    cita => obtenerNombreDia(cita.fecha)
+  );
+
+  calcularGanancias(citasValidas);
+  mostrarCancelaciones(citasCanceladas);
+}
+function calcularGanancias(citas) {
+  let totalGanancias = 0;
+
+  citas.forEach(cita => {
+    const nombreTerapia = normalizarTexto(cita.therapies?.nombre || '');
+
+    if (nombreTerapia.includes('aromaterapia')) {
+      return;
+    }
+
+    const precio = convertirPrecioANumero(cita.therapies?.precio);
+
+    totalGanancias += precio;
+  });
+
+  const elementoGanancias = document.getElementById('ganancias-totales');
+
+  elementoGanancias.textContent = formatearDinero(totalGanancias);
+}
+function mostrarCancelaciones(citasCanceladas) {
+  const contador = document.getElementById('total-cancelaciones');
+  const tabla = document.getElementById('tabla-cancelaciones');
+
+  const total = citasCanceladas.length;
+
+  contador.textContent =
+    total === 1
+      ? '1 cancelación'
+      : `${total} cancelaciones`;
+
+  if (total === 0) {
+    tabla.innerHTML = `
+      <tr>
+        <td colspan="5">No hubo citas canceladas en este rango de fechas.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  tabla.innerHTML = '';
+
+  citasCanceladas.forEach(cita => {
+    const fila = document.createElement('tr');
+
+    const paciente = cita.profiles?.nombre || 'Sin paciente';
+    const terapia = cita.therapies?.nombre || 'Sin terapia';
+    const hora = formatearHora(cita.hora_inicio);
+
+    fila.innerHTML = `
+      <td>${cita.fecha}</td>
+      <td>${hora}</td>
+      <td>${paciente}</td>
+      <td>${terapia}</td>
+      <td>${cita.status}</td>
+    `;
+
+    tabla.appendChild(fila);
+  });
+}
+function convertirPrecioANumero(precio) {
+  if (precio === null || precio === undefined || precio === '') {
+    return 0;
+  }
+
+  if (typeof precio === 'number') {
+    return precio;
+  }
+
+  const precioLimpio = String(precio).replace(/[^\d.-]/g, '');
+  const precioNumerico = Number(precioLimpio);
+
+  return isNaN(precioNumerico) ? 0 : precioNumerico;
+}
+
+function normalizarTexto(texto) {
+  return texto
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
+function formatearDinero(cantidad) {
+  return cantidad.toLocaleString('es-MX', {
+    style: 'currency',
+    currency: 'MXN'
+  });
+}
+function mostrarMasFrecuente(data, elementoId, obtenerValor) {
+  const conteo = {};
+
+  data.forEach(item => {
+    const valor = obtenerValor(item);
+    conteo[valor] = (conteo[valor] || 0) + 1;
+  });
+
+  let mayorValor = 'Sin datos';
+  let mayorCantidad = 0;
+
+  Object.keys(conteo).forEach(valor => {
+    if (conteo[valor] > mayorCantidad) {
+      mayorValor = valor;
+      mayorCantidad = conteo[valor];
+    }
+  });
+
+  document.getElementById(elementoId).textContent =
+    mayorCantidad > 0
+      ? `${mayorValor} (${mayorCantidad} citas)`
+      : 'Sin datos';
+}
+
+function obtenerNombreDia(fechaTexto) {
+  const fecha = new Date(fechaTexto + 'T00:00:00');
+
+  const dias = [
+    'Domingo',
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado'
+  ];
+
+  return dias[fecha.getDay()];
 }
