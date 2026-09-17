@@ -16,7 +16,15 @@
     <nav class="nav">
       <a href="index.html">Inicio</a>
       <a href="agendar.html">Agendar terapia</a>
-      <a href="login.html">Login</a>
+      <a href="login.html" class="solo-invitado">Login</a>
+
+      <a href="mis-citas.html" class="solo-sesion oculto">
+        Mis citas
+      </a>
+
+      <button type="button" onclick="cerrarSesion()" class="btn-logout solo-sesion oculto">
+        Cerrar sesión
+  </button>
     </nav>
   </header>
 
@@ -30,11 +38,9 @@
     </section>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js"></script>
-  <script src="js/terapias.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js"></script>
-  <script src="js/auth.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/terapias.js"></script>
 </body>
 </html>

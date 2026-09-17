@@ -131,16 +131,225 @@
         </div>
       </div>
     </section>
+    <!-- CLIENTES REGISTRADOS -->
+<!-- CLIENTES REGISTRADOS -->
+<section class="section">
+  <h2>Clientes registrados</h2>
 
-    <!-- PRECIOS -->
-    <section class="section">
-      <h2>Editar precios de terapias</h2>
+  <div class="admin-box admin-form-box">
+    <h3 id="titulo-form-cliente">Agregar nuevo cliente</h3>
 
-      <div id="lista-precios-terapias" class="admin-box">
-        <p>Cargando terapias...</p>
+    <form id="form-cliente" onsubmit="guardarCliente(event)">
+      <input type="hidden" id="cliente-id-edicion">
+
+      <div class="admin-form-grid">
+        <div>
+          <label for="cliente-nombre">Nombre completo</label>
+          <input type="text" id="cliente-nombre" required>
+        </div>
+
+        <div>
+          <label for="cliente-email">Correo electrónico</label>
+          <input type="email" id="cliente-email" required>
+        </div>
+
+        <div>
+          <label for="cliente-telefono">Teléfono</label>
+          <input type="text" id="cliente-telefono">
+        </div>
+
+        <div>
+          <label for="cliente-genero">Género</label>
+          <select id="cliente-genero" required>
+            <option value="">Selecciona una opción</option>
+            <option value="femenino">Femenino</option>
+            <option value="masculino">Masculino</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="cliente-password" id="label-cliente-password">
+            Contraseña temporal
+          </label>
+
+          <input
+            type="password"
+            id="cliente-password"
+            minlength="6"
+            required
+          >
+
+          <small id="ayuda-cliente-password" class="oculto">
+            Déjala vacía para conservar la contraseña actual.
+          </small>
+        </div>
       </div>
-    </section>
 
+      <div class="admin-actions">
+        <button type="submit" class="btn-primary" id="btn-guardar-cliente">
+          Agregar cliente
+        </button>
+
+        <button
+          type="button"
+          class="btn-secondary oculto"
+          id="btn-cancelar-edicion-cliente"
+          onclick="limpiarFormularioCliente()"
+        >
+          Cancelar edición
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="admin-box admin-panel-margin">
+    <h3>Listado de clientes</h3>
+
+    <div class="table-container">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Género</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody id="tabla-clientes">
+          <tr>
+            <td colspan="5">Cargando clientes...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- GESTIÓN DE TERAPIAS -->
+<section class="section">
+  <h2>Administrar terapias</h2>
+
+  <div class="admin-box admin-form-box">
+    <h3 id="titulo-form-terapia">Agregar nueva terapia</h3>
+
+    <form id="form-terapia" onsubmit="guardarTerapia(event)">
+      <input type="hidden" id="terapia-id-edicion">
+
+      <div class="admin-form-grid">
+        <div>
+          <label for="terapia-admin-nombre">Nombre</label>
+          <input type="text" id="terapia-admin-nombre" required>
+        </div>
+
+        <div>
+          <label for="terapia-admin-slug">Enlace / slug</label>
+          <input
+            type="text"
+            id="terapia-admin-slug"
+            placeholder="masaje-relajante"
+          >
+        </div>
+
+        <div>
+          <label for="terapia-admin-duracion">Duración en minutos</label>
+          <input
+            type="number"
+            id="terapia-admin-duracion"
+            min="1"
+            value="60"
+            required
+          >
+        </div>
+
+        <div>
+          <label for="terapia-admin-precio">Precio</label>
+          <input
+            type="text"
+            id="terapia-admin-precio"
+            placeholder="400"
+          >
+        </div>
+
+        <div>
+          <label for="terapia-admin-imagen">Ruta o URL de imagen</label>
+          <input
+            type="text"
+            id="terapia-admin-imagen"
+            placeholder="assets/img/nueva-terapia.jpg"
+          >
+        </div>
+
+        <div>
+          <label for="terapia-admin-activo">Visible para clientes</label>
+          <select id="terapia-admin-activo">
+            <option value="true">Activa</option>
+            <option value="false">Inactiva</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="admin-form-grid">
+        <div>
+          <label for="terapia-admin-descripcion">Descripción corta</label>
+          <textarea
+            id="terapia-admin-descripcion"
+            placeholder="Texto que aparece en la tarjeta de la terapia"
+          ></textarea>
+        </div>
+
+        <div>
+          <label for="terapia-admin-descripcion-larga">Descripción detallada</label>
+          <textarea
+            id="terapia-admin-descripcion-larga"
+            placeholder="Información que aparece al abrir el detalle de la terapia"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="admin-actions">
+        <button type="submit" class="btn-primary">
+          Guardar terapia
+        </button>
+
+        <button
+          type="button"
+          class="btn-secondary oculto"
+          id="btn-cancelar-edicion-terapia"
+          onclick="limpiarFormularioTerapia()"
+        >
+          Cancelar edición
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="admin-box admin-panel-margin">
+    <h3>Terapias registradas</h3>
+
+    <div class="table-container">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Duración</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody id="tabla-terapias-admin">
+          <tr>
+            <td colspan="5">Cargando terapias...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
