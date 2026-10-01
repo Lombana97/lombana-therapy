@@ -8,8 +8,26 @@
 
   <link rel="stylesheet" href="css/styles.css">
 
-  <!-- ESTILOS DEL MENÚ HAMBURGUESA RESPONSIVE -->
+  <!-- ESTILOS DEL MENÚ Y HAMBURGUESA RESPONSIVE -->
   <style>
+    /* =========================================
+       TAMAÑO DEL TEXTO DEL MENÚ EN PC
+       ========================================= */
+    @media (min-width: 993px) {
+      .header .nav {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem; /* Espacio entre cada módulo */
+      }
+
+      .header .nav > a,
+      .header .nav .dropdown-btn,
+      .header .nav .btn-logout {
+        font-size: 1.2rem !important; /* Aumenta o disminuye este valor si lo quieres aún más grande (ej. 1.3rem) */
+        font-weight: 600;
+      }
+    }
+
     /* Botón hamburguesa (oculto en computadora) */
     .hamburger-btn {
       display: none;
@@ -43,19 +61,29 @@
       transition: opacity 0.3s ease;
     }
 
-    /* Ajustes exclusivos para vista Responsive (Móviles y Tablets) */
+    /* =========================================
+       DISEÑO RESPONSIVE (Móviles y Tablets)
+       ========================================= */
     @media (max-width: 992px) {
       .header {
         position: sticky;
         top: 0;
         z-index: 10000;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        display: flex !important;
+        flex-direction: row !important; /* Mantiene el logo y la hamburguesa en la misma fila */
+        justify-content: space-between !important; /* Logo a la izquierda y hamburguesa a su derecha */
+        align-items: center !important;
+        width: 100%;
+      }
+
+      .header .logo h1 {
+        margin: 0;
+        font-size: 1.4rem;
       }
 
       .hamburger-btn {
         display: flex;
+        margin-left: auto; /* Empuja el botón hamburguesa a la derecha del logo */
       }
 
       /* Animación del botón a una "X" */
@@ -71,7 +99,7 @@
         transform: translateY(-9.5px) rotate(-45deg);
       }
 
-      /* Panel desplegable del menú */
+      /* Panel desplegable del menú (sale desde la derecha) */
       .header .nav {
         position: fixed !important;
         top: 0;
@@ -116,7 +144,7 @@
         padding: 0.75rem 0.5rem;
         color: #222222 !important;
         border-bottom: 1px solid #eeeeee;
-        font-size: 1.05rem;
+        font-size: 1.1rem;
         text-decoration: none;
       }
 
@@ -157,7 +185,7 @@
       <h1>Lombana Therapy</h1>
     </a>
 
-    <!-- BOTÓN HAMBURGUESA (Solo se ve en móvil/tablet) -->
+    <!-- BOTÓN HAMBURGUESA (A la derecha del logo en móvil/tablet) -->
     <button
       type="button"
       class="hamburger-btn"
@@ -302,7 +330,7 @@
           style="border:0;"
           allowfullscreen=""
           loading="lazy"
-          referpolicy="no-referrer-when-downgrade"
+          referrerpolicy="no-referrer-when-downgrade"
           title="Ubicación de Lombana Therapy">
         </iframe>
       </div>
