@@ -7,6 +7,146 @@
   <title>Lombana Therapy</title>
 
   <link rel="stylesheet" href="css/styles.css">
+
+  <!-- ESTILOS DEL MENÚ HAMBURGUESA RESPONSIVE -->
+  <style>
+    /* Botón hamburguesa (oculto en computadora) */
+    .hamburger-btn {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 22px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      z-index: 10002;
+    }
+
+    .hamburger-btn .bar {
+      width: 100%;
+      height: 3px;
+      background-color: currentColor;
+      border-radius: 3px;
+      transition: all 0.3s ease-in-out;
+    }
+
+    /* Fondo oscuro al abrir el menú en móvil */
+    .menu-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9998;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    /* Ajustes exclusivos para vista Responsive (Móviles y Tablets) */
+    @media (max-width: 992px) {
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 10000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .hamburger-btn {
+        display: flex;
+      }
+
+      /* Animación del botón a una "X" */
+      .hamburger-btn.active .bar:nth-child(1) {
+        transform: translateY(9.5px) rotate(45deg);
+      }
+
+      .hamburger-btn.active .bar:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger-btn.active .bar:nth-child(3) {
+        transform: translateY(-9.5px) rotate(-45deg);
+      }
+
+      /* Panel desplegable del menú */
+      .header .nav {
+        position: fixed !important;
+        top: 0;
+        right: -100%;
+        width: 280px;
+        max-width: 82%;
+        height: 100vh;
+        background-color: #ffffff;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+        padding: 5rem 1.5rem 2rem !important;
+        gap: 0.5rem !important;
+        box-shadow: -5px 0 20px rgba(0, 0, 0, 0.15);
+        transition: right 0.35s ease-in-out;
+        z-index: 10001;
+        overflow-y: auto;
+      }
+
+      /* Mostrar menú cuando está activo */
+      .header .nav.active {
+        right: 0;
+      }
+
+      .menu-overlay.active {
+        display: block;
+        opacity: 1;
+      }
+
+      /* Enlaces y elementos dentro del menú móvil */
+      .header .nav > a,
+      .header .nav .dropdown,
+      .header .nav .dropdown-btn,
+      .header .nav .btn-logout {
+        width: 100%;
+        text-align: left;
+      }
+
+      .header .nav > a,
+      .header .nav .dropdown-btn {
+        display: block;
+        padding: 0.75rem 0.5rem;
+        color: #222222 !important;
+        border-bottom: 1px solid #eeeeee;
+        font-size: 1.05rem;
+        text-decoration: none;
+      }
+
+      /* Submenú de terapias adaptado a móvil */
+      .header .nav .dropdown-content {
+        position: static !important;
+        box-shadow: none !important;
+        width: 100% !important;
+        padding-left: 1rem;
+        background: #f9f9f9;
+        border-radius: 6px;
+      }
+
+      .header .nav .dropdown-content a {
+        color: #444444 !important;
+        padding: 0.6rem 0.5rem;
+        display: block;
+      }
+
+      .header .nav .btn-logout {
+        margin-top: 0.75rem;
+        text-align: center;
+      }
+
+      /* Respeta tu clase .oculto de auth.js */
+      .header .nav .oculto {
+        display: none !important;
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -17,7 +157,20 @@
       <h1>Lombana Therapy</h1>
     </a>
 
-    <nav class="nav">
+    <!-- BOTÓN HAMBURGUESA (Solo se ve en móvil/tablet) -->
+    <button
+      type="button"
+      class="hamburger-btn"
+      id="hamburger-btn"
+      aria-label="Abrir menú"
+      aria-expanded="false"
+    >
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+
+    <nav class="nav" id="nav-menu">
       <a href="index.html">Inicio</a>
 
       <a
@@ -54,6 +207,9 @@
       </button>
     </nav>
   </header>
+
+  <!-- FONDO OSCURO PARA CERRAR MENÚ EN MÓVIL -->
+  <div class="menu-overlay" id="menu-overlay"></div>
 
 
   <!-- CONTENIDO PRINCIPAL -->
@@ -146,7 +302,7 @@
           style="border:0;"
           allowfullscreen=""
           loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
+          referpolicy="no-referrer-when-downgrade"
           title="Ubicación de Lombana Therapy">
         </iframe>
       </div>
@@ -176,6 +332,56 @@
   <script src="js/supabase.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/terapias.js"></script>
+
+  <!-- SCRIPT DEL MENÚ HAMBURGUESA -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburgerBtn = document.getElementById('hamburger-btn');
+      const navMenu = document.getElementById('nav-menu');
+      const menuOverlay = document.getElementById('menu-overlay');
+
+      function toggleMenu() {
+        const isActive = navMenu.classList.contains('active');
+        hamburgerBtn.classList.toggle('active', !isActive);
+        navMenu.classList.toggle('active', !isActive);
+        menuOverlay.classList.toggle('active', !isActive);
+        hamburgerBtn.setAttribute('aria-expanded', !isActive);
+        document.body.style.overflow = !isActive ? 'hidden' : '';
+      }
+
+      function closeMenu() {
+        hamburgerBtn.classList.remove('active');
+        navMenu.classList.remove('active');
+        menuOverlay.classList.remove('active');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+
+      if (hamburgerBtn) {
+        hamburgerBtn.addEventListener('click', toggleMenu);
+      }
+
+      if (menuOverlay) {
+        menuOverlay.addEventListener('click', closeMenu);
+      }
+
+      // Cerrar el menú al hacer clic en cualquier enlace o botón dentro de nav
+      if (navMenu) {
+        navMenu.addEventListener('click', (e) => {
+          if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+            closeMenu();
+          }
+        });
+      }
+
+      // Cerrar automáticamente si se agranda la pantalla a tamaño escritorio
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 992) {
+          closeMenu();
+        }
+      });
+    });
+  </script>
 
   <!-- REDIRECCIÓN DEL ADMINISTRADOR -->
   <script>
