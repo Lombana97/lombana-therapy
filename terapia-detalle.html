@@ -8,18 +8,65 @@
 </head>
 <body>
 
+ <!-- ENCABEZADO UNIFICADO PARA TODOS LOS MÓDULOS -->
   <header class="header">
-  <a href="index.html" class="logo">
-    <h1>Lombana Therapy</h1>
-  
-  </a>
+    <a href="index.html" class="logo">
+      <h1>Lombana Therapy</h1>
+    </a>
 
-    <nav class="nav">
+    <!-- BOTÓN HAMBURGUESA -->
+    <button
+      type="button"
+      class="hamburger-btn"
+      id="hamburger-btn"
+      aria-label="Abrir menú"
+      aria-expanded="false"
+    >
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+
+    <nav class="nav" id="nav-menu">
       <a href="index.html">Inicio</a>
-      <a href="terapias.html">Terapias</a>
+
+      <a
+        href="mis-citas.html"
+        id="btn-mis-citas"
+        class="solo-sesion oculto"
+      >
+        Citas
+      </a>
+
+      <div class="dropdown">
+        <a href="terapias.html" class="dropdown-btn">Terapias</a>
+
+        <div class="dropdown-content" id="menu-terapias">
+          <a href="terapias.html">Cargando terapias...</a>
+        </div>
+      </div>
+
       <a href="agendar.html">Agendar terapia</a>
+      <a href="index.html#contacto">Contacto</a>
+      <a href="index.html#ubicacion">Ubicación</a>
+
+      <a href="login.html" class="solo-invitado">
+        Login
+      </a>
+
+      <button
+        type="button"
+        onclick="cerrarSesion()"
+        class="btn-logout solo-sesion oculto"
+        id="btn-logout"
+      >
+        Cerrar sesión
+      </button>
     </nav>
   </header>
+
+  <!-- FONDO OSCURO MÓVIL -->
+  <div class="menu-overlay" id="menu-overlay"></div>
 
   <main>
     <section class="section detail-section">
