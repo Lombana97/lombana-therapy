@@ -1,6 +1,6 @@
 console.log('Lombana Therapy cargado correctamente.');
 /* =========================================
-   LÓGICA GLOBAL DEL MENÚ HAMBURGUESA
+   LÓGICA GLOBAL DEL MENÚ HAMBURGUESA (SIN CONFLICTOS)
    ========================================= */
 document.addEventListener('DOMContentLoaded', () => {
   const header = document.querySelector('.header');
@@ -8,7 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!header || !navMenu) return;
 
-  // 1. Si la página no tiene el botón hamburguesa en el HTML, lo inyecta automáticamente a la derecha del logo
+  // CANDADO: Evita que se duplique el evento si ya se inicializó en el HTML
+  if (header.dataset.menuInitialized === 'true') return;
+  header.dataset.menuInitialized = 'true';
+
+  // 1. Crear botón hamburguesa si no existe en el HTML
   let hamburgerBtn = document.getElementById('hamburger-btn');
   if (!hamburgerBtn) {
     hamburgerBtn = document.createElement('button');
@@ -25,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     header.insertBefore(hamburgerBtn, navMenu);
   }
 
-  // 2. Si la página no tiene el fondo oscuro (overlay), lo crea automáticamente
+  // 2. Crear fondo oscuro si no existe en el HTML
   let menuOverlay = document.getElementById('menu-overlay');
   if (!menuOverlay) {
     menuOverlay = document.createElement('div');
@@ -34,12 +38,18 @@ document.addEventListener('DOMContentLoaded', () => {
     header.insertAdjacentElement('afterend', menuOverlay);
   }
 
-  function toggleMenu() {
+  // Clonamos el botón para limpiar cualquier evento duplicado previo
+  const cleanHamburgerBtn = hamburgerBtn.cloneNode(true);
+  hamburgerBtn.parentNode.replaceChild(cleanHamburgerBtn, hamburgerBtn);
+  hamburgerBtn = cleanHamburgerBtn;
+
+  function toggleMenu(e) {
+    e.stopPropagation();
     const isActive = navMenu.classList.contains('active');
     hamburgerBtn.classList.toggle('active', !isActive);
     navMenu.classList.toggle('active', !isActive);
     menuOverlay.classList.toggle('active', !isActive);
-    hamburgerBtn.setAttribute('aria-expanded', !isActive);
+    hamburgerBtn.setAttribute('aria-expanded', String(!isActive));
     document.body.style.overflow = !isActive ? 'hidden' : '';
   }
 
@@ -54,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
   hamburgerBtn.addEventListener('click', toggleMenu);
   menuOverlay.addEventListener('click', closeMenu);
 
-  // Cerrar el menú al hacer clic en cualquier módulo (Inicio, Citas, Terapias, Agendar, Contacto, Ubicación, Login)
+  // Cerrar al tocar un enlace (excepto si solo abre el desplegable de Terapias)
   navMenu.addEventListener('click', (e) => {
     const clickedLink = e.target.closest('a, button');
     if (clickedLink) {

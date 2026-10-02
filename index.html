@@ -360,57 +360,6 @@
   <script src="js/supabase.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/terapias.js"></script>
-
-  <!-- SCRIPT DEL MENÚ HAMBURGUESA -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const hamburgerBtn = document.getElementById('hamburger-btn');
-      const navMenu = document.getElementById('nav-menu');
-      const menuOverlay = document.getElementById('menu-overlay');
-
-      function toggleMenu() {
-        const isActive = navMenu.classList.contains('active');
-        hamburgerBtn.classList.toggle('active', !isActive);
-        navMenu.classList.toggle('active', !isActive);
-        menuOverlay.classList.toggle('active', !isActive);
-        hamburgerBtn.setAttribute('aria-expanded', !isActive);
-        document.body.style.overflow = !isActive ? 'hidden' : '';
-      }
-
-      function closeMenu() {
-        hamburgerBtn.classList.remove('active');
-        navMenu.classList.remove('active');
-        menuOverlay.classList.remove('active');
-        hamburgerBtn.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
-      }
-
-      if (hamburgerBtn) {
-        hamburgerBtn.addEventListener('click', toggleMenu);
-      }
-
-      if (menuOverlay) {
-        menuOverlay.addEventListener('click', closeMenu);
-      }
-
-      // Cerrar el menú al hacer clic en cualquier enlace o botón dentro de nav
-      if (navMenu) {
-        navMenu.addEventListener('click', (e) => {
-          if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
-            closeMenu();
-          }
-        });
-      }
-
-      // Cerrar automáticamente si se agranda la pantalla a tamaño escritorio
-      window.addEventListener('resize', () => {
-        if (window.innerWidth > 992) {
-          closeMenu();
-        }
-      });
-    });
-  </script>
-
   <!-- REDIRECCIÓN DEL ADMINISTRADOR -->
   <script>
     async function mostrarOpcionesAdmin() {
